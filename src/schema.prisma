@@ -1,0 +1,77 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DB_URL")
+}
+
+model Region {
+    id          Int     @id @default(autoincrement())
+    region_code Int     @unique
+    region      String  @db.Char(255)
+    longitude   Float   @default(0)
+    latitude    Float   @default(0)
+    has_points  Boolean @default(false)
+
+    @@index([has_points, longitude, latitude])
+}
+
+model City {
+    id          Int    @id @default(autoincrement())
+    code        Int    @unique
+    city        String @db.Char(255)
+    region      String @db.Char(255)
+    region_code Int
+    longitude   Float
+    latitude    Float
+    points_qty  Int    @default(0)
+
+    @@index(region_code)
+    @@index([points_qty, longitude, latitude])
+}
+
+model Point {
+    id                       Int      @id @default(autoincrement())
+    code                     String   @unique @db.Char(10)
+    uuid                     String   @db.Char(36)
+    name                     String   @db.Char(255)
+    region_code              Int
+    city_code                Int
+    longitude                Float
+    latitude                 Float
+    address                  String   @db.Char(255)
+    address_full             String   @db.Char(255)
+    address_comment          String?  @db.Char(255)
+    nearest_station          String?  @db.Char(255)
+    nearest_metro_station    String?  @db.Char(255)
+    work_time                String   @db.Char(100)
+    phones                   Json
+    email                    String?  @db.Char(255)
+    note                     String?  @db.Char(255)
+    type                     String   @db.Char(8)
+    owner_code               String   @db.Char(255)
+    take_only                Boolean
+    is_handout               Boolean
+    is_reception             Boolean
+    is_dressing_room         Boolean
+    have_cashless            Boolean
+    have_cash                Boolean
+    have_fast_payment_system Boolean
+    allowed_cod              Boolean
+    is_ltl                   Boolean?
+    fulfillment              Boolean?
+    site                     String?  @db.Char(255)
+    work_time_list           Json
+    work_time_exception_list Json?
+    weight_min               Float?
+    weight_max               Float?
+    dimensions               Json?
+
+    is_deleted Boolean @default(false)
+
+    @@index(city_code)
+    @@index(region_code)
+    @@index([is_deleted, longitude, latitude])
+}
