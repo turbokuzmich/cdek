@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, City } from '@prisma/client';
 import { infer as inferType } from 'zod';
 import { regionSchema, citySchema, pointSchema } from './schemas';
 import { property } from 'lodash';
@@ -122,6 +122,12 @@ export class DbService
     >`SELECT DISTINCT region_code FROM Point WHERE is_deleted = 0;`;
 
     return result.map<number>(property('region_code'));
+  }
+
+  getNearestCity(lng: number, lat: number) {
+    return this.$queryRaw<
+      City | undefined
+    >`SELECT * FROM (SELECT *, (((acos(sin((${lat} * pi() / 180)) * sin((latitude * pi() / 180)) + cos((${lat} * pi() / 180 )) * cos((latitude * pi() / 180)) * cos(((${lng} - longitude) * pi() / 180)))) * 180 / pi()) * 60 * 1.1515) AS distance FROM City WHERE points_qty > 0) City ORDER BY distance LIMIT 1;`;
   }
 
   suggestCities(text: string) {

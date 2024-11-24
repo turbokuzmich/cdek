@@ -21,6 +21,20 @@ export class AppController {
     private readonly dbService: DbService,
   ) {}
 
+  @Get('/cities/nearest')
+  async getNearestCity(
+    @Query('lng', new ParseFloatPipe()) lng: number,
+    @Query('lat', new ParseFloatPipe()) lat: number,
+  ) {
+    const city = await this.dbService.getNearestCity(lng, lat);
+
+    if (!city) {
+      throw new NotFoundException('Город не найден');
+    }
+
+    return city;
+  }
+
   @Get('/cities/suggest')
   getCities(
     @Query(
