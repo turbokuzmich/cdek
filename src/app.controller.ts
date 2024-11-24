@@ -50,6 +50,26 @@ export class AppController {
     return this.dbService.suggestCities(text);
   }
 
+  @Get('/points/by-city')
+  getPointsByCity(@Query('city', new ParseIntPipe()) city: number) {
+    return this.dbService.getPointsByCityCode(city);
+  }
+
+  @Get('points/by-bounds')
+  getPointsForBounds(
+    @Query('northWestLng', new ParseFloatPipe()) northWestLng: number,
+    @Query('northWestLat', new ParseFloatPipe()) northWestLat: number,
+    @Query('southEastLng', new ParseFloatPipe()) southEastLng: number,
+    @Query('southEastLat', new ParseFloatPipe()) southEastLat: number,
+  ) {
+    return this.dbService.getPointsByBounds(
+      northWestLng,
+      northWestLat,
+      southEastLng,
+      southEastLat,
+    );
+  }
+
   @Get('/points/:code')
   async getPoint(
     @Param(
@@ -69,25 +89,5 @@ export class AppController {
     }
 
     return point;
-  }
-
-  @Get('/points/by-city')
-  getPointsByCity(@Query('city', new ParseIntPipe()) city: number) {
-    return this.dbService.getPointsByCityCode(city);
-  }
-
-  @Get('points/by-bounds')
-  getPointsForBounds(
-    @Query('northWestLng', new ParseFloatPipe()) northWestLng: number,
-    @Query('northWestLat', new ParseFloatPipe()) northWestLat: number,
-    @Query('southEastLng', new ParseFloatPipe()) southEastLng: number,
-    @Query('southEastLat', new ParseFloatPipe()) southEastLat: number,
-  ) {
-    return this.dbService.getPointsByBounds(
-      northWestLng,
-      northWestLat,
-      southEastLng,
-      southEastLat,
-    );
   }
 }
