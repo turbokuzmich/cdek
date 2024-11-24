@@ -154,6 +154,7 @@ export class DbService
       select: {
         id: true,
         code: true,
+        city_code: true,
         type: true,
         allowed_cod: true,
         longitude: true,
