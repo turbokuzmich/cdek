@@ -90,4 +90,11 @@ export class AppController {
 
     return point;
   }
+
+  @Get('/update')
+  async update() {
+    await this.updateService.updateAll();
+
+    return { ok: true };
+  }
 }
