@@ -42,7 +42,7 @@ export class AppController {
       new ZodValidationPipe(
         string({
           required_error: 'Пожалуйста, укажите text',
-        }).min(3, 'text должен быть не менее 3 символов'),
+        }), //.min(3, 'text должен быть не менее 3 символов'),
       ),
     )
     text: string,
